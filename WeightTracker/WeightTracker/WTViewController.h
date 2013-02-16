@@ -19,6 +19,8 @@
     
     WTEntryView *entryView;
     NSMutableArray *words;
+    
+    NSIndexPath *indexOfCurrentEditingCell;
 }
 
 @end

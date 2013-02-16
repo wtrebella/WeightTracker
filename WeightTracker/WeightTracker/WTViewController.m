@@ -96,7 +96,8 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self displayEntryViewWithIndexPath:indexPath];
+    indexOfCurrentEditingCell = indexPath;
+    [self displayEntryView];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -127,7 +128,7 @@
     return cell;
 }
 
-- (void) displayEntryViewWithIndexPath:(NSIndexPath *)indexPath {
+- (void) displayEntryView {
     NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"WTEntryView" owner:nil options:nil];
     
     for (UIView *view in views) {
@@ -152,21 +153,31 @@
     
     [UIView beginAnimations:nil context:nil];
     
-    foodListTableView.contentOffset = CGPointMake(0, [foodListTableView rectForRowAtIndexPath:indexPath].origin.y);
+    foodListTableView.contentOffset = CGPointMake(0, [foodListTableView rectForRowAtIndexPath:indexOfCurrentEditingCell].origin.y);
     entryView.frame = finalFrame;
     [UIView commitAnimations];
+}
+
+- (CGFloat) foodListViewHeight
+{
+    [foodListTableView layoutIfNeeded];
+    return [foodListTableView contentSize].height;
 }
 
 - (void) dismissEntryView {
     [foodListTableView setUserInteractionEnabled:YES];
     CGRect offScreenFrame = entryView.bounds;
     offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame));
+    
+    float cellPointY = [foodListTableView rectForRowAtIndexPath:indexOfCurrentEditingCell].origin.y;
+    CGPoint newOffset = CGPointMake(0, cellPointY - foodListTableView.frame.size.height);
+        
+    if (cellPointY > [self foodListViewHeight]) newOffset.y = [self foodListViewHeight];
+    
+    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-    
-    // foodListTableView.contentOffset = CGPointMake(0, [foodListTableView rectForRowAtIndexPath:indexPath].origin.y);
-    // fix this so the table view scrolls down if it's below a threshhold
-    
     entryView.frame = offScreenFrame;
     [UIView commitAnimations];
 }
