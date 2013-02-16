@@ -96,7 +96,7 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    [self displayEntryViewWithIndexPath: indexPath];
+    [self displayEntryViewWithIndexPath:indexPath];
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -147,6 +147,9 @@
     CGRect finalFrame = entryView.frame;
     finalFrame.origin = CGPointMake(0, entryView.frame.origin.y - entryView.bounds.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height);
     
+    [foodListTableView setUserInteractionEnabled:NO];
+    [entryView setUserInteractionEnabled:YES];
+    
     [UIView beginAnimations:nil context:nil];
     
     foodListTableView.contentOffset = CGPointMake(0, [foodListTableView rectForRowAtIndexPath:indexPath].origin.y);
@@ -155,10 +158,15 @@
 }
 
 - (void) dismissEntryView {
+    [foodListTableView setUserInteractionEnabled:YES];
     CGRect offScreenFrame = entryView.bounds;
     offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame));
     [UIView beginAnimations:nil context:nil];
     [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
+    
+    // foodListTableView.contentOffset = CGPointMake(0, [foodListTableView rectForRowAtIndexPath:indexPath].origin.y);
+    // fix this so the table view scrolls down if it's below a threshhold
+    
     entryView.frame = offScreenFrame;
     [UIView commitAnimations];
 }
