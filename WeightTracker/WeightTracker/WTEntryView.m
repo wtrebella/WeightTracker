@@ -6,7 +6,9 @@
 //  Copyright (c) 2013 Whitaker Trebella. All rights reserved.
 //
 
+#import "WTEntryViewDelegate.h"
 #import "WTEntryView.h"
+#import "WTViewController.h"
 
 @implementation WTEntryView
 
@@ -17,6 +19,15 @@
         // Initialization code
     }
     return self;
+}
+
+- (IBAction)doneButtonPressed:(id)sender {
+    [self.delegate doneButtonPressed];
+}
+
+- (BOOL) textFieldShouldReturn:(UITextField *)textField {
+    [textField resignFirstResponder];
+    return NO;
 }
 
 /*

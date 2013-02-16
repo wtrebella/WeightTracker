@@ -87,10 +87,10 @@
 		B077011A16CC6DA400017626 /* foodListTableViewCellBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foodListTableViewCellBackground.png; sourceTree = "<group>"; };
 		B077012116CC793700017626 /* navBar44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBar44@2x.png"; sourceTree = "<group>"; };
 		B077012216CC793800017626 /* navBar44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar44.png; sourceTree = "<group>"; };
-		B077012C16CC86E500017626 /* WTEntryViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WTEntryViewDelegate.h; sourceTree = "<group>"; };
 		B077012D16D013D300017626 /* WTEntryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WTEntryView.xib; sourceTree = "<group>"; };
 		B077012F16D013EF00017626 /* WTEntryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTEntryView.h; sourceTree = "<group>"; };
 		B077013016D013F000017626 /* WTEntryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTEntryView.m; sourceTree = "<group>"; };
+		B077013216D026D500017626 /* WTEntryViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WTEntryViewDelegate.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,9 +156,9 @@
 				B07700B716C9D38500017626 /* WTViewController.h */,
 				B07700B816C9D38500017626 /* WTViewController.m */,
 				B077012D16D013D300017626 /* WTEntryView.xib */,
+				B077013216D026D500017626 /* WTEntryViewDelegate.h */,
 				B077012F16D013EF00017626 /* WTEntryView.h */,
 				B077013016D013F000017626 /* WTEntryView.m */,
-				B077012C16CC86E500017626 /* WTEntryViewDelegate.h */,
 				B077010F16CC68C400017626 /* WTFoodListTableViewCell.xib */,
 				B077010A16CC67E000017626 /* WTFoodListTableViewCell.h */,
 				B077010B16CC67E000017626 /* WTFoodListTableViewCell.m */,

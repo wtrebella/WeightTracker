@@ -10,8 +10,9 @@
 
 @class WTViewController;
 
-@interface WTEntryView : UIView
+@interface WTEntryView : UIView <UITextFieldDelegate>
 
 @property WTViewController *delegate;
+@property (weak, nonatomic) IBOutlet UIButton *doneButton;
 
 @end
