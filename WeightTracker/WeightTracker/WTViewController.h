@@ -9,15 +9,15 @@
 #import <UIKit/UIKit.h>
 #import "WTEntryViewDelegate.h"
 
-@class WTEntryViewController;
 @class WTFoodListTableView;
+@class WTEntryView;
 @class WTWeightDisplayView;
 
 @interface WTViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, WTEntryViewDelegate> {
     IBOutlet WTFoodListTableView *foodListTableView;
     IBOutlet WTWeightDisplayView *weightDisplayView;
     
-    WTEntryViewController *evc;
+    WTEntryView *entryView;
     NSMutableArray *words;
 }
 

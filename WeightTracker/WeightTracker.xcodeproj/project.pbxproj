@@ -34,8 +34,8 @@
 		B077011C16CC6DA400017626 /* foodListTableViewCellBackground.png in Resources */ = {isa = PBXBuildFile; fileRef = B077011A16CC6DA400017626 /* foodListTableViewCellBackground.png */; };
 		B077012316CC793800017626 /* navBar44@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = B077012116CC793700017626 /* navBar44@2x.png */; };
 		B077012416CC793800017626 /* navBar44.png in Resources */ = {isa = PBXBuildFile; fileRef = B077012216CC793800017626 /* navBar44.png */; };
-		B077012916CC847F00017626 /* WTEntryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = B077012816CC847F00017626 /* WTEntryViewController.m */; };
-		B077012B16CC851100017626 /* WTEntryViewController.xib in Resources */ = {isa = PBXBuildFile; fileRef = B077012A16CC851100017626 /* WTEntryViewController.xib */; };
+		B077012E16D013D300017626 /* WTEntryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = B077012D16D013D300017626 /* WTEntryView.xib */; };
+		B077013116D013F000017626 /* WTEntryView.m in Sources */ = {isa = PBXBuildFile; fileRef = B077013016D013F000017626 /* WTEntryView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -87,10 +87,10 @@
 		B077011A16CC6DA400017626 /* foodListTableViewCellBackground.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = foodListTableViewCellBackground.png; sourceTree = "<group>"; };
 		B077012116CC793700017626 /* navBar44@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "navBar44@2x.png"; sourceTree = "<group>"; };
 		B077012216CC793800017626 /* navBar44.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = navBar44.png; sourceTree = "<group>"; };
-		B077012716CC847F00017626 /* WTEntryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTEntryViewController.h; sourceTree = "<group>"; };
-		B077012816CC847F00017626 /* WTEntryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTEntryViewController.m; sourceTree = "<group>"; };
-		B077012A16CC851100017626 /* WTEntryViewController.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WTEntryViewController.xib; sourceTree = "<group>"; };
 		B077012C16CC86E500017626 /* WTEntryViewDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = WTEntryViewDelegate.h; sourceTree = "<group>"; };
+		B077012D16D013D300017626 /* WTEntryView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = WTEntryView.xib; sourceTree = "<group>"; };
+		B077012F16D013EF00017626 /* WTEntryView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WTEntryView.h; sourceTree = "<group>"; };
+		B077013016D013F000017626 /* WTEntryView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WTEntryView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,10 +155,10 @@
 				B07700AF16C9D38500017626 /* WTAppDelegate.m */,
 				B07700B716C9D38500017626 /* WTViewController.h */,
 				B07700B816C9D38500017626 /* WTViewController.m */,
+				B077012D16D013D300017626 /* WTEntryView.xib */,
+				B077012F16D013EF00017626 /* WTEntryView.h */,
+				B077013016D013F000017626 /* WTEntryView.m */,
 				B077012C16CC86E500017626 /* WTEntryViewDelegate.h */,
-				B077012A16CC851100017626 /* WTEntryViewController.xib */,
-				B077012716CC847F00017626 /* WTEntryViewController.h */,
-				B077012816CC847F00017626 /* WTEntryViewController.m */,
 				B077010F16CC68C400017626 /* WTFoodListTableViewCell.xib */,
 				B077010A16CC67E000017626 /* WTFoodListTableViewCell.h */,
 				B077010B16CC67E000017626 /* WTFoodListTableViewCell.m */,
@@ -304,7 +304,7 @@
 				B077011C16CC6DA400017626 /* foodListTableViewCellBackground.png in Resources */,
 				B077012316CC793800017626 /* navBar44@2x.png in Resources */,
 				B077012416CC793800017626 /* navBar44.png in Resources */,
-				B077012B16CC851100017626 /* WTEntryViewController.xib in Resources */,
+				B077012E16D013D300017626 /* WTEntryView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -347,7 +347,7 @@
 				B07700EE16C9EEE600017626 /* WTNavigationBar.m in Sources */,
 				B07700F416C9EF0A00017626 /* WTCalendarView.m in Sources */,
 				B077010C16CC67E100017626 /* WTFoodListTableViewCell.m in Sources */,
-				B077012916CC847F00017626 /* WTEntryViewController.m in Sources */,
+				B077013116D013F000017626 /* WTEntryView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

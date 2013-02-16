@@ -10,7 +10,7 @@
 #import "WTFoodListTableViewCell.h"
 #import "WTFoodListTableView.h"
 #import "WTWeightDisplayView.h"
-#import "WTEntryViewController.h"
+#import "WTEntryView.h"
 
 @interface WTViewController ()
 
@@ -63,7 +63,7 @@
 // Called when the UIKeyboardDidShowNotification is sent.
 - (void)keyboardWillBeShown:(NSNotification*)aNotification
 {
-    [UIView setAnimationsEnabled:YES];
+    /*[UIView setAnimationsEnabled:YES];
     
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -77,12 +77,12 @@
     [UIView beginAnimations:nil context:nil];
     evc.view.frame = finalFrame;
     self.view.frame = mainFrame;
-    [UIView commitAnimations];
+    [UIView commitAnimations];*/
 }
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
-    [UIView setAnimationsEnabled:YES];
+    /*[UIView setAnimationsEnabled:YES];
     
     NSDictionary* info = [aNotification userInfo];
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
@@ -96,11 +96,11 @@
     [UIView beginAnimations:nil context:nil];
     evc.view.frame = finalFrame;
     self.view.frame = mainFrame;
-    [UIView commitAnimations];
+    [UIView commitAnimations];*/
 }
 
 - (void) entryViewControllerDone:(WTEntryViewController *)vc {
-    CGRect offScreenFrame = vc.view.bounds;
+    /*CGRect offScreenFrame = vc.view.bounds;
     offScreenFrame.origin = CGPointMake(0, evc.view.frame.origin.y + evc.view.bounds.size.height);
     
     CGRect mainFrame = self.view.frame;
@@ -110,39 +110,47 @@
     vc.view.frame = offScreenFrame;
     self.view.frame = mainFrame;
     [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-    [UIView commitAnimations];
+    [UIView commitAnimations];*/
 }
 
 - (void) animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
 {
-    [evc.view removeFromSuperview];
+    //[evc.view removeFromSuperview];
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
-    evc = [[WTEntryViewController alloc] initWithNibName:@"WTEntryViewController" bundle:nil];
-    evc.delegate = self;
-
-    [self.view.window addSubview:evc.view];
-        
-    CGRect offScreenFrame = evc.view.bounds;
-    offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame));
-    evc.view.frame = offScreenFrame;
+    NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"WTEntryView" owner:nil options:nil];
     
-    CGRect finalFrame = evc.view.frame;
-    finalFrame.origin = CGPointMake(0, evc.view.frame.origin.y - evc.view.bounds.size.height);// - [[UIApplication sharedApplication] statusBarFrame].size.height);
+    for (UIView *view in views) {
+        if([view isKindOfClass:[UIView class]])
+        {
+            entryView = (WTEntryView*)view;
+        }
+    }
+    entryView.delegate = self;
+
+    [self.view addSubview:entryView];
+    
+    entryView.frame = CGRectMake(0, 200, entryView.frame.size.width, entryView.frame.size.height);
+        
+    /*CGRect offScreenFrame = entryView.bounds;
+    offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame));
+    entryView.frame = offScreenFrame;
+    
+    CGRect finalFrame = entryView.frame;
+    finalFrame.origin = CGPointMake(0, entryView.frame.origin.y - entryView.bounds.size.height);// - [[UIApplication sharedApplication] statusBarFrame].size.height);
     
     CGRect mainFrame = self.view.frame;
-    mainFrame.origin = CGPointMake(0, -evc.view.bounds.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
+    mainFrame.origin = CGPointMake(0, -entryView.bounds.size.height + [[UIApplication sharedApplication] statusBarFrame].size.height);
     
     CGRect rectOfCellInTableView = [tableView rectForRowAtIndexPath:indexPath];
 
     [UIView beginAnimations:nil context:nil];
     
     tableView.contentOffset = CGPointMake(0, rectOfCellInTableView.origin.y - tableView.frame.size.height + rectOfCellInTableView.size.height);
-    evc.view.frame = finalFrame;
+    entryView.frame = finalFrame;
     self.view.frame = mainFrame;
-    [UIView commitAnimations];
-
+    [UIView commitAnimations];*/
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
