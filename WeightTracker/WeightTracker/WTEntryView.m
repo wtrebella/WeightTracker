@@ -21,7 +21,7 @@
     return self;
 }
 
-- (IBAction)doneButtonPressed:(id)sender {
+- (IBAction) doneButtonPressed:(id)sender {
     [self.delegate doneButtonPressed];
 }
 

@@ -11,6 +11,7 @@
 #import "WTFoodListTableView.h"
 #import "WTWeightDisplayView.h"
 #import "WTEntryView.h"
+#import "WTCalorieData.h"
 
 @interface WTViewController ()
 
@@ -24,19 +25,17 @@
     
     [self registerForKeyboardNotifications];
 
-    words = [[NSMutableArray alloc] initWithObjects:
-             @"Hot dog",
-             @"Pizza",
-             @"Ice cream",
-             @"Food",
-             @"Chips",
-             @"Chocolate",
-             @"Turkey",
-             @"Sandwich",
-             @"Pecans",
-             @"Cheetos",
-             @"Soda",
-             @"Jog",
+    calorieDataArray = [[NSMutableArray alloc] initWithObjects:
+             [[WTCalorieData alloc] initWithName:@"Hot Dog" numCalories:250 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Jog" numCalories:-320 type:kCalorieTypeExercise],
+             [[WTCalorieData alloc] initWithName:@"Ice Cream" numCalories:150 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Food" numCalories:532 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Chips" numCalories:123 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Chocolate" numCalories:75 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Turkey" numCalories:124 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Sandwich" numCalories:632 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Pecans" numCalories:54 type:kCalorieTypeFood],
+             [[WTCalorieData alloc] initWithName:@"Cheetos" numCalories:173 type:kCalorieTypeFood],
              nil];
     
     [foodListTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -45,7 +44,6 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
 }
 
 - (void)registerForKeyboardNotifications
@@ -123,14 +121,16 @@
     UILabel *cellLabel = (UILabel *) cell.textLabel;
     cellLabel.backgroundColor = [UIColor clearColor];
     cellLabel.textColor = [UIColor whiteColor];
-    cellLabel.text = [words objectAtIndex:indexPath.row];
+    WTCalorieData *data = [calorieDataArray objectAtIndex:indexPath.row];
+    cellLabel.text = data.name;
             
     return cell;
 }
 
 - (void) updateNameOfCell:(NSString *)name {
-    WTFoodListTableViewCell *cell = (WTFoodListTableViewCell *)[foodListTableView cellForRowAtIndexPath:indexOfCurrentEditingCell];
-    cell.textLabel.text = name;
+    WTCalorieData *data = [calorieDataArray objectAtIndex:indexOfCurrentEditingCell.row];
+    data.name = name;
+    [foodListTableView reloadData];
 }
 
 - (void) displayEntryView {
@@ -145,7 +145,7 @@
         }
     }
     entryView.delegate = self;
-    entryView.name.text = cell.textLabel.text;
+    entryView.nameTextField.text = cell.textLabel.text;
     
     [self.view addSubview:entryView];
     
@@ -191,7 +191,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return words.count;
+    return calorieDataArray.count;
 }
 
 @end

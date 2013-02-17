@@ -18,7 +18,7 @@
     IBOutlet WTWeightDisplayView *weightDisplayView;
     
     WTEntryView *entryView;
-    NSMutableArray *words;
+    NSMutableArray *calorieDataArray;
     
     NSIndexPath *indexOfCurrentEditingCell;
 }
