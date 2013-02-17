@@ -20,8 +20,7 @@
     
     WTCalorieData *todaysAutoBurntCalories;
     WTEntryView *entryView;
-    NSMutableArray *foodData;
-    NSMutableArray *exerciseData;
+    NSMutableArray *calorieData;
     
     NSIndexPath *indexOfCurrentEditingCell;
 }
