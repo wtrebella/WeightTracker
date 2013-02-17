@@ -25,7 +25,7 @@
     
     [self registerForKeyboardNotifications];
     
-    todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Auto Burnt Calories" numCalories:-2457 type:kCalorieTypeAuto];
+    todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:-2457 type:kCalorieTypeAuto];
     
     calorieData = [[NSMutableArray alloc] initWithObjects:
             todaysAutoBurntCalories,
@@ -90,6 +90,21 @@
     [UIView commitAnimations];
 }
 
+- (UITableViewCellEditingStyle) tableView:(UITableView *)tableView editingStyleForRowAtIndexPath:(NSIndexPath *)indexPath {
+	if (!indexPath) return UITableViewCellEditingStyleNone;
+    if (indexPath.row == 0) return UITableViewCellEditingStyleNone;
+    if ([calorieData count] == 0) return UITableViewCellEditingStyleNone;
+    return UITableViewCellEditingStyleDelete;
+}
+
+- (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (editingStyle == UITableViewCellEditingStyleDelete) {
+		[calorieData removeObjectAtIndex:indexPath.row];
+        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        [tableView reloadData];
+	}
+}
+
 - (void) doneButtonPressed {
     [self dismissEntryView];
 }
@@ -100,6 +115,7 @@
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row == 0) return;
     indexOfCurrentEditingCell = indexPath;
     [self displayEntryView];
 }
@@ -122,13 +138,21 @@
         }
     }
 
-    cell.textLabel.font = [UIFont fontWithName:@"Futura" size:18];
-    UILabel *cellLabel = (UILabel *) cell.textLabel;
-    cellLabel.backgroundColor = [UIColor clearColor];
-    cellLabel.textColor = [UIColor whiteColor];
-    
     WTCalorieData *data = [calorieData objectAtIndex:indexPath.row];
-    cellLabel.text = data.name;
+    
+    cell.textLabel.font = [UIFont fontWithName:@"Futura" size:18];
+    cell.textLabel.backgroundColor = [UIColor clearColor];
+    cell.textLabel.textColor = [UIColor whiteColor];
+    cell.textLabel.text = data.name;
+    cell.selectionStyle = UITableViewCellSelectionStyleNone;
+    float weightChange = data.numCalories / 3500.0;
+    NSString* formattedNumber = [NSString stringWithFormat:@"%.02f", weightChange];
+    if (weightChange > 0) formattedNumber = [NSString stringWithFormat:@"+%@", formattedNumber];
+    formattedNumber = [NSString stringWithFormat:@"%@ lbs", formattedNumber];
+    cell.weightChangeLabel.text = formattedNumber;
+    if (weightChange > 0) cell.weightChangeLabel.textColor = [UIColor redColor];
+    else if (weightChange < 0) cell.weightChangeLabel.textColor = [UIColor greenColor];
+    else cell.weightChangeLabel.textColor = [UIColor blueColor];
     
     return cell;
 }

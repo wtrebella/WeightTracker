@@ -10,4 +10,6 @@
 
 @interface WTFoodListTableViewCell : UITableViewCell
 
+@property (weak, nonatomic) IBOutlet UILabel *weightChangeLabel;
+
 @end
