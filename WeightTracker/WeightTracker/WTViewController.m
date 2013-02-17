@@ -24,10 +24,11 @@
     [super viewDidLoad];
     
     [self registerForKeyboardNotifications];
-
-    calorieDataArray = [[NSMutableArray alloc] initWithObjects:
+    
+    todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Auto Burnt Calories" numCalories:-2457 type:kCalorieTypeAuto];
+    
+    foodData = [[NSMutableArray alloc] initWithObjects:
              [[WTCalorieData alloc] initWithName:@"Hot Dog" numCalories:250 type:kCalorieTypeFood],
-             [[WTCalorieData alloc] initWithName:@"Jog" numCalories:-320 type:kCalorieTypeExercise],
              [[WTCalorieData alloc] initWithName:@"Ice Cream" numCalories:150 type:kCalorieTypeFood],
              [[WTCalorieData alloc] initWithName:@"Food" numCalories:532 type:kCalorieTypeFood],
              [[WTCalorieData alloc] initWithName:@"Chips" numCalories:123 type:kCalorieTypeFood],
@@ -38,7 +39,15 @@
              [[WTCalorieData alloc] initWithName:@"Cheetos" numCalories:173 type:kCalorieTypeFood],
              nil];
     
+    exerciseData = [[NSMutableArray alloc] initWithObjects:
+                    [[WTCalorieData alloc] initWithName:@"Jog" numCalories:-320 type:kCalorieTypeExercise],
+                    [[WTCalorieData alloc] initWithName:@"Bike" numCalories:-600 type:kCalorieTypeExercise],
+                    [[WTCalorieData alloc] initWithName:@"Swing" numCalories:-360 type:kCalorieTypeExercise],
+                    [[WTCalorieData alloc] initWithName:@"Swim" numCalories:-230 type:kCalorieTypeExercise],
+                    nil];
+    
     [foodListTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    //[foodListTableView setsec]
 }
 
 - (void)didReceiveMemoryWarning
@@ -93,9 +102,33 @@
     [entryView removeFromSuperview];
 }
 
+- (UIView *) tableView:(UITableView *)tableView viewForHeaderInSection:(NSInteger)section {
+    UIView *headerView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, tableView.bounds.size.width, 25)];
+    
+    UIImageView *backgroundImage = [[UIImageView alloc] initWithImage:[UIImage imageNamed:@"sectionHeaderBackground.png"]];
+    backgroundImage.frame = headerView.frame;
+    [headerView addSubview: backgroundImage];
+    
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 0, tableView.bounds.size.width, 25)];
+    label.text = [tableView.dataSource tableView:tableView titleForHeaderInSection:section];
+    label.textColor = [UIColor whiteColor];
+    label.backgroundColor = [UIColor clearColor];
+    label.font = [UIFont fontWithName:@"Futura" size:12];
+    
+    [headerView addSubview:label];
+    return headerView;
+}
+
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
     indexOfCurrentEditingCell = indexPath;
     [self displayEntryView];
+}
+
+- (NSString *) tableView:(UITableView *)tableView titleForHeaderInSection:(NSInteger)section {
+    if (section == 0) return @"Auto Burnt Calories";
+    else if (section == 1) return @"Food";
+    else if (section == 2) return @"Exercise";
+    else return nil;
 }
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
@@ -117,18 +150,39 @@
     }
 
     cell.textLabel.font = [UIFont fontWithName:@"Futura" size:18];
-        
     UILabel *cellLabel = (UILabel *) cell.textLabel;
     cellLabel.backgroundColor = [UIColor clearColor];
     cellLabel.textColor = [UIColor whiteColor];
-    WTCalorieData *data = [calorieDataArray objectAtIndex:indexPath.row];
+    
+    WTCalorieData *data;
+    
+    if (indexPath.section == 0) {
+        data = todaysAutoBurntCalories;
+    }
+    
+    else if (indexPath.section == 1) {
+        data = [foodData objectAtIndex:indexPath.row];
+        
+    }
+    else if (indexPath.section == 2) {
+        data = [exerciseData objectAtIndex:indexPath.row];
+    }
+    
     cellLabel.text = data.name;
-            
+    
     return cell;
 }
 
 - (void) updateNameOfCell:(NSString *)name {
-    WTCalorieData *data = [calorieDataArray objectAtIndex:indexOfCurrentEditingCell.row];
+    WTCalorieData *data;
+    
+    if (indexOfCurrentEditingCell.section == 0) {
+        data = [foodData objectAtIndex:indexOfCurrentEditingCell.row];
+    }
+    else if (indexOfCurrentEditingCell.section == 1) {
+        data = [exerciseData objectAtIndex:indexOfCurrentEditingCell.row];
+    }
+
     data.name = name;
     [foodListTableView reloadData];
 }
@@ -166,6 +220,13 @@
     [UIView commitAnimations];
 }
 
+- (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
+    int numSections = 1;
+    if ([foodData count] > 0) numSections++;
+    if ([exerciseData count] > 0) numSections++;
+    return numSections;
+}
+
 - (CGFloat) foodListViewHeight
 {
     [foodListTableView layoutIfNeeded];
@@ -191,7 +252,10 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return calorieDataArray.count;
+    if (section == 0) return 1;
+    else if (section == 1) return [foodData count];
+    else if (section == 2) return [exerciseData count];
+    else return 0;
 }
 
 @end

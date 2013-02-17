@@ -12,13 +12,16 @@
 @class WTFoodListTableView;
 @class WTEntryView;
 @class WTWeightDisplayView;
+@class WTCalorieData;
 
 @interface WTViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, WTEntryViewDelegate> {
     IBOutlet WTFoodListTableView *foodListTableView;
     IBOutlet WTWeightDisplayView *weightDisplayView;
     
+    WTCalorieData *todaysAutoBurntCalories;
     WTEntryView *entryView;
-    NSMutableArray *calorieDataArray;
+    NSMutableArray *foodData;
+    NSMutableArray *exerciseData;
     
     NSIndexPath *indexOfCurrentEditingCell;
 }

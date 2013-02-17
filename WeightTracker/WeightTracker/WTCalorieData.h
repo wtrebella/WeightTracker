@@ -10,7 +10,8 @@
 
 typedef enum {
     kCalorieTypeFood,
-    kCalorieTypeExercise
+    kCalorieTypeExercise,
+    kCalorieTypeAuto
 } CalorieType;
 
 @interface WTCalorieData : NSObject
