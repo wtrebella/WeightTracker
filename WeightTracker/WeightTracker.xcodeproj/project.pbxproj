@@ -153,10 +153,10 @@
 				B07700F916C9F4D300017626 /* Images */,
 				B07700AE16C9D38500017626 /* WTAppDelegate.h */,
 				B07700AF16C9D38500017626 /* WTAppDelegate.m */,
-				B07700B716C9D38500017626 /* WTViewController.h */,
-				B07700B816C9D38500017626 /* WTViewController.m */,
 				B077012D16D013D300017626 /* WTEntryView.xib */,
 				B077013216D026D500017626 /* WTEntryViewDelegate.h */,
+				B07700B716C9D38500017626 /* WTViewController.h */,
+				B07700B816C9D38500017626 /* WTViewController.m */,
 				B077012F16D013EF00017626 /* WTEntryView.h */,
 				B077013016D013F000017626 /* WTEntryView.m */,
 				B077010F16CC68C400017626 /* WTFoodListTableViewCell.xib */,
@@ -538,6 +538,7 @@
 				B07700D916C9D38500017626 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		B07700DA16C9D38500017626 /* Build configuration list for PBXNativeTarget "WeightTrackerTests" */ = {
 			isa = XCConfigurationList;
@@ -546,6 +547,7 @@
 				B07700DC16C9D38500017626 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

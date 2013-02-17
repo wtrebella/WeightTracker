@@ -16,7 +16,7 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        // Initialization code
+        
     }
     return self;
 }
@@ -28,6 +28,10 @@
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {
     [textField resignFirstResponder];
     return NO;
+}
+
+- (IBAction)nameTextDidChange:(UITextField *)sender {
+    [self.delegate updateNameOfCell:sender.text];
 }
 
 /*

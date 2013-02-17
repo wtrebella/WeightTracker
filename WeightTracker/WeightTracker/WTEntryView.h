@@ -12,6 +12,7 @@
 
 @interface WTEntryView : UIView <UITextFieldDelegate>
 
+@property (weak, nonatomic) IBOutlet UITextField *name;
 @property WTViewController *delegate;
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
 

@@ -11,5 +11,6 @@
 @protocol WTEntryViewDelegate <NSObject>
 
 - (void) doneButtonPressed;
+- (void) updateNameOfCell:(NSString *)name;
 
 @end

@@ -128,7 +128,14 @@
     return cell;
 }
 
+- (void) updateNameOfCell:(NSString *)name {
+    WTFoodListTableViewCell *cell = (WTFoodListTableViewCell *)[foodListTableView cellForRowAtIndexPath:indexOfCurrentEditingCell];
+    cell.textLabel.text = name;
+}
+
 - (void) displayEntryView {
+    WTFoodListTableViewCell *cell = (WTFoodListTableViewCell *)[foodListTableView cellForRowAtIndexPath:indexOfCurrentEditingCell];
+    
     NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"WTEntryView" owner:nil options:nil];
     
     for (UIView *view in views) {
@@ -138,6 +145,7 @@
         }
     }
     entryView.delegate = self;
+    entryView.name.text = cell.textLabel.text;
     
     [self.view addSubview:entryView];
     
