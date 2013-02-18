@@ -36,10 +36,22 @@
         numberToolbar.items = [NSArray arrayWithObjects:
                                [[UIBarButtonItem alloc]initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(cancelNumberPad)],
                                [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
-                               [[UIBarButtonItem alloc]initWithTitle:@"Apply" style:UIBarButtonItemStyleDone target:self action:@selector(doneWithNumberPad)],
+                               [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneWithNumberPad)],
                                nil];
         [numberToolbar sizeToFit];
         self.calorieTextField.inputAccessoryView = numberToolbar;
+    }
+    
+    else if (textField == self.nameTextField) {
+        UIToolbar* nameToolBar = [[UIToolbar alloc]initWithFrame:CGRectMake(0, 0, 320, 50)];
+        nameToolBar.barStyle = UIBarStyleBlackTranslucent;
+        nameToolBar.items = [NSArray arrayWithObjects:
+                               [[UIBarButtonItem alloc]initWithTitle:@"Cancel" style:UIBarButtonItemStyleBordered target:self action:@selector(cancelNameKeyboard)],
+                               [[UIBarButtonItem alloc]initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil],
+                               [[UIBarButtonItem alloc]initWithTitle:@"Done" style:UIBarButtonItemStyleDone target:self action:@selector(doneWithNameKeyboard)],
+                               nil];
+        [nameToolBar sizeToFit];
+        self.nameTextField.inputAccessoryView = nameToolBar;
     }
 }
 
@@ -51,6 +63,16 @@
 - (void) doneWithNumberPad {
     self.initialCalorieString = self.calorieTextField.text;
     [self.calorieTextField resignFirstResponder];
+}
+
+- (void) cancelNameKeyboard {
+    self.nameTextField.text = self.initialNameString;
+    [self.nameTextField resignFirstResponder];
+}
+
+- (void) doneWithNameKeyboard {
+    self.initialNameString = self.nameTextField.text;
+    [self.nameTextField resignFirstResponder];
 }
 
 - (BOOL) textFieldShouldReturn:(UITextField *)textField {

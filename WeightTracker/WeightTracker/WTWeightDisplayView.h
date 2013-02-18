@@ -8,8 +8,8 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WTWeightDisplayView : UIScrollView {
-    UILabel *mainLabel;
-}
+@interface WTWeightDisplayView : UIScrollView
+
+@property (strong, nonatomic) UILabel *mainLabel;
 
 @end

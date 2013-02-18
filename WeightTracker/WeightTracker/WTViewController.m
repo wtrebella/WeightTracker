@@ -25,9 +25,15 @@
     
     [self registerForKeyboardNotifications];
     
+    UIButton *addNewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    addNewButton.frame = CGRectMake(275, 4, 35, 35);
+    [addNewButton setTitle:@"+" forState:UIControlStateNormal];
+    addNewButton.titleLabel.font = [UIFont fontWithName:@"Futura" size:25];
+    [self.view addSubview:addNewButton];
+        
     isUpForKeyboard = NO;
     
-    todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:-2457 type:kCalorieTypeAuto];
+    todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
     
     calorieData = [[NSMutableArray alloc] initWithObjects:
             todaysAutoBurntCalories,
@@ -40,13 +46,15 @@
             [[WTCalorieData alloc] initWithName:@"Sandwich" numCalories:632 type:kCalorieTypeFood],
             [[WTCalorieData alloc] initWithName:@"Pecans" numCalories:54 type:kCalorieTypeFood],
             [[WTCalorieData alloc] initWithName:@"Cheetos" numCalories:173 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Jog" numCalories:-320 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Bike" numCalories:-600 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Swing" numCalories:-360 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Swim" numCalories:-230 type:kCalorieTypeExercise],
+            [[WTCalorieData alloc] initWithName:@"Jog" numCalories:320 type:kCalorieTypeExercise],
+            [[WTCalorieData alloc] initWithName:@"Bike" numCalories:600 type:kCalorieTypeExercise],
+            [[WTCalorieData alloc] initWithName:@"Swing" numCalories:360 type:kCalorieTypeExercise],
+            [[WTCalorieData alloc] initWithName:@"Swim" numCalories:230 type:kCalorieTypeExercise],
             nil];
     
     [foodListTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
+    
+    [self updateWeightDisplay];
 }
 
 - (void)didReceiveMemoryWarning
@@ -110,6 +118,7 @@
 		[calorieData removeObjectAtIndex:indexPath.row];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
         [tableView reloadData];
+        [self updateWeightDisplay];
 	}
 }
 
@@ -153,7 +162,9 @@
     cell.textLabel.textColor = [UIColor whiteColor];
     cell.textLabel.text = data.name;
     cell.selectionStyle = UITableViewCellSelectionStyleNone;
-    float weightChange = data.numCalories / 3500.0;
+    int calories = data.numCalories;
+    if (data.type == kCalorieTypeExercise || data.type == kCalorieTypeAuto) calories *= -1;
+    float weightChange = calories / 3500.0;
     NSString* formattedNumber = [NSString stringWithFormat:@"%.02f", weightChange];
     if (weightChange > 0) formattedNumber = [NSString stringWithFormat:@"+%@", formattedNumber];
     formattedNumber = [NSString stringWithFormat:@"%@ lbs", formattedNumber];
@@ -165,16 +176,37 @@
     return cell;
 }
 
+- (void) updateWeightDisplay {
+    int totalCalories = 0;
+    for (int i = 0; i < [calorieData count]; i++) {
+        WTCalorieData *data = [calorieData objectAtIndex:i];
+        int calories = data.numCalories;
+        if (data.type == kCalorieTypeExercise || data.type == kCalorieTypeAuto) calories *= -1;
+        totalCalories += calories;
+    }
+    
+    float weightChange = totalCalories / 3500.0;
+    NSString* formattedNumber = [NSString stringWithFormat:@"%.02f", weightChange];
+    if (weightChange > 0) formattedNumber = [NSString stringWithFormat:@"+%@", formattedNumber];
+    formattedNumber = [NSString stringWithFormat:@"%@ lbs", formattedNumber];
+    weightDisplayView.mainLabel.text = formattedNumber;
+    if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor redColor];
+    else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor greenColor];
+    else weightDisplayView.mainLabel.textColor = [UIColor blueColor];
+}
+
 - (void) updateNameOfCell:(NSString *)name {
     WTCalorieData *data = [calorieData objectAtIndex:indexOfCurrentEditingCell.row];
     data.name = name;
     [foodListTableView reloadData];
+    [self updateWeightDisplay];
 }
 
 - (void) updateCalorieCount:(int)calories {
     WTCalorieData *data = [calorieData objectAtIndex:indexOfCurrentEditingCell.row];
     data.numCalories = calories;
     [foodListTableView reloadData];
+    [self updateWeightDisplay];
 }
 
 - (void) displayEntryView {
