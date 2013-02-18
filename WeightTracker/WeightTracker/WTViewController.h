@@ -24,6 +24,8 @@
     
     NSIndexPath *indexOfCurrentEditingCell;
     
+    UIButton *addNewButton;
+    
     BOOL isUpForKeyboard;
 }
 

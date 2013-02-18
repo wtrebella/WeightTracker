@@ -25,10 +25,11 @@
     
     [self registerForKeyboardNotifications];
     
-    UIButton *addNewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    addNewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
     addNewButton.frame = CGRectMake(275, 4, 35, 35);
     [addNewButton setTitle:@"+" forState:UIControlStateNormal];
     addNewButton.titleLabel.font = [UIFont fontWithName:@"Futura" size:25];
+    [addNewButton addTarget:self action:@selector(addNewButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:addNewButton];
         
     isUpForKeyboard = NO;
@@ -53,11 +54,20 @@
             nil];
     
     [foodListTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
-    
+
     [self updateWeightDisplay];
 }
 
-- (void)didReceiveMemoryWarning
+- (void) addNewButtonPressed {
+    WTCalorieData *data = [[WTCalorieData alloc] initWithName:@"Food" numCalories:0 type:kCalorieTypeFood];
+    [calorieData addObject:data];
+    [foodListTableView layoutIfNeeded];
+    [foodListTableView reloadData];
+    indexOfCurrentEditingCell = [NSIndexPath indexPathForRow:[calorieData count] - 1 inSection:0];
+    [self displayEntryView];
+}
+
+- (void) didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
 }
@@ -126,9 +136,13 @@
     [self dismissEntryView];
 }
 
-- (void) animationDidStop:(NSString *)animationID finished:(NSNumber *)finished context:(void *)context
+- (void) animationStopped
 {
     [entryView removeFromSuperview];
+    for (int i = 0; i < 10; i++) [calorieData removeLastObject];
+    [foodListTableView layoutIfNeeded];
+    [foodListTableView reloadData];
+    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:YES];
 }
 
 - (void) tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
@@ -171,7 +185,7 @@
     cell.weightChangeLabel.text = formattedNumber;
     if (weightChange > 0) cell.weightChangeLabel.textColor = [UIColor redColor];
     else if (weightChange < 0) cell.weightChangeLabel.textColor = [UIColor greenColor];
-    else cell.weightChangeLabel.textColor = [UIColor blueColor];
+    else cell.weightChangeLabel.text = @"";
     
     return cell;
 }
@@ -192,7 +206,7 @@
     weightDisplayView.mainLabel.text = formattedNumber;
     if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor redColor];
     else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor greenColor];
-    else weightDisplayView.mainLabel.textColor = [UIColor blueColor];
+    else weightDisplayView.mainLabel.textColor = [UIColor cyanColor];
 }
 
 - (void) updateNameOfCell:(NSString *)name {
@@ -229,20 +243,30 @@
     [self.view addSubview:entryView];
     
     CGRect offScreenFrame = entryView.bounds;
-    offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame));
+    offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame) - [[UIApplication sharedApplication] statusBarFrame].size.height);
     entryView.frame = offScreenFrame;
     
     CGRect finalFrame = entryView.frame;
-    finalFrame.origin = CGPointMake(0, entryView.frame.origin.y - entryView.bounds.size.height - [[UIApplication sharedApplication] statusBarFrame].size.height);
+    finalFrame.origin = CGPointMake(0, entryView.frame.origin.y - entryView.bounds.size.height);
     
     [foodListTableView setUserInteractionEnabled:NO];
+    [addNewButton setUserInteractionEnabled:NO];
     [entryView setUserInteractionEnabled:YES];
     
-    [UIView beginAnimations:nil context:nil];
+    for (int i = 0; i < 10; i++) [calorieData addObject:[[WTCalorieData alloc] initWithName:nil numCalories:0 type:kCalorieTypeFood]];
     
-    foodListTableView.contentOffset = CGPointMake(0, [foodListTableView rectForRowAtIndexPath:indexOfCurrentEditingCell].origin.y);
+    [foodListTableView reloadData];
+    [foodListTableView layoutIfNeeded];
+    
+    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionTop animated:YES];
+
+    [UIView beginAnimations:nil context:nil];
     entryView.frame = finalFrame;
     [UIView commitAnimations];
+}
+
+- (float) tableView:(UITableView *)tableView heightForRowAtIndexPath:(NSIndexPath *)indexPath {
+    return 44;
 }
 
 - (NSInteger) numberOfSectionsInTableView:(UITableView *)tableView {
@@ -251,30 +275,36 @@
 
 - (CGFloat) foodListViewHeight
 {
+    [foodListTableView reloadData];
     [foodListTableView layoutIfNeeded];
     return [foodListTableView contentSize].height;
 }
 
 - (void) dismissEntryView {
     [foodListTableView setUserInteractionEnabled:YES];
+    [addNewButton setUserInteractionEnabled:YES];
+    
     CGRect offScreenFrame = entryView.bounds;
     offScreenFrame.origin = CGPointMake(0, CGRectGetMaxY(self.view.frame));
     
-    float cellPointY = [foodListTableView rectForRowAtIndexPath:indexOfCurrentEditingCell].origin.y;
-    CGPoint newOffset = CGPointMake(0, cellPointY - foodListTableView.frame.size.height);
-        
-    if (cellPointY > [self foodListViewHeight]) newOffset.y = [self foodListViewHeight];
-    
+    [foodListTableView layoutIfNeeded];
+    [foodListTableView reloadData];
+
     [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     
-    [UIView beginAnimations:nil context:nil];
-    [UIView setAnimationDidStopSelector:@selector(animationDidStop:finished:context:)];
-    entryView.frame = offScreenFrame;
-    [UIView commitAnimations];
+    [UIView animateWithDuration:0.4 animations:^(void) {
+        entryView.frame = offScreenFrame;
+    }completion:^(BOOL finished) {
+        [entryView removeFromSuperview];
+        for (int i = 0; i < 10; i++) [calorieData removeLastObject];
+        [foodListTableView layoutIfNeeded];
+        [foodListTableView reloadData];
+        [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        }];
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-   return [calorieData count];
+    return [calorieData count];
 }
 
 @end
