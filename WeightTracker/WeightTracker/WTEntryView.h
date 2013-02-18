@@ -12,6 +12,8 @@
 
 @interface WTEntryView : UIView <UITextFieldDelegate>
 
+@property (strong, nonatomic) NSString *initialNameString;
+@property (strong, nonatomic) NSString *initialCalorieString;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *calorieTextField;
 @property WTViewController *delegate;

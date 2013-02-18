@@ -23,6 +23,8 @@
     NSMutableArray *calorieData;
     
     NSIndexPath *indexOfCurrentEditingCell;
+    
+    BOOL isUpForKeyboard;
 }
 
 @end

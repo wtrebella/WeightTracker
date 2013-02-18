@@ -25,6 +25,8 @@
     
     [self registerForKeyboardNotifications];
     
+    isUpForKeyboard = NO;
+    
     todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:-2457 type:kCalorieTypeAuto];
     
     calorieData = [[NSMutableArray alloc] initWithObjects:
@@ -65,12 +67,16 @@
 }
 
 - (void)keyboardWillBeShown:(NSNotification*)aNotification
-{    
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+{
+    if (isUpForKeyboard) return;
+    
+    isUpForKeyboard = YES;
+    
+    //NSDictionary* info = [aNotification userInfo];
+    //CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     CGRect mainFrame = self.view.frame;
-    mainFrame.origin = CGPointMake(0, self.view.frame.origin.y - kbSize.height + 100);
+    mainFrame.origin = CGPointMake(0, -130);
         
     [UIView beginAnimations:nil context:nil];
     self.view.frame = mainFrame;
@@ -79,11 +85,13 @@
 
 - (void)keyboardWillBeHidden:(NSNotification*)aNotification
 {
-    NSDictionary* info = [aNotification userInfo];
-    CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    isUpForKeyboard = NO;
+    
+    //NSDictionary* info = [aNotification userInfo];
+    //CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     CGRect mainFrame = self.view.frame;
-    mainFrame.origin = CGPointMake(0, self.view.frame.origin.y + kbSize.height - 100);
+    mainFrame.origin = CGPointMake(0, [[UIApplication sharedApplication] statusBarFrame].size.height);
     
     [UIView beginAnimations:nil context:nil];
     self.view.frame = mainFrame;
@@ -183,6 +191,8 @@
     entryView.delegate = self;
     entryView.nameTextField.text = data.name;
     entryView.calorieTextField.text = [NSString stringWithFormat:@"%i", data.numCalories];
+    entryView.initialNameString = data.name;
+    entryView.initialCalorieString = [NSString stringWithFormat:@"%i", data.numCalories];
     
     [self.view addSubview:entryView];
     
