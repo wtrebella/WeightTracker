@@ -12,5 +12,6 @@
 
 - (void) doneButtonPressed;
 - (void) updateNameOfCell:(NSString *)name;
+- (void) updateCalorieCount:(int)calories;
 
 @end

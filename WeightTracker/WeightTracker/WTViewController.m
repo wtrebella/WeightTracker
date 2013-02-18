@@ -70,7 +70,7 @@
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     CGRect mainFrame = self.view.frame;
-    mainFrame.origin = CGPointMake(0, self.view.frame.origin.y - kbSize.height + 130);
+    mainFrame.origin = CGPointMake(0, self.view.frame.origin.y - kbSize.height + 100);
         
     [UIView beginAnimations:nil context:nil];
     self.view.frame = mainFrame;
@@ -83,7 +83,7 @@
     CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     CGRect mainFrame = self.view.frame;
-    mainFrame.origin = CGPointMake(0, self.view.frame.origin.y + kbSize.height - 130);
+    mainFrame.origin = CGPointMake(0, self.view.frame.origin.y + kbSize.height - 100);
     
     [UIView beginAnimations:nil context:nil];
     self.view.frame = mainFrame;
@@ -163,8 +163,14 @@
     [foodListTableView reloadData];
 }
 
+- (void) updateCalorieCount:(int)calories {
+    WTCalorieData *data = [calorieData objectAtIndex:indexOfCurrentEditingCell.row];
+    data.numCalories = calories;
+    [foodListTableView reloadData];
+}
+
 - (void) displayEntryView {
-    WTFoodListTableViewCell *cell = (WTFoodListTableViewCell *)[foodListTableView cellForRowAtIndexPath:indexOfCurrentEditingCell];
+    WTCalorieData *data = [calorieData objectAtIndex:indexOfCurrentEditingCell.row];
     
     NSArray* views = [[NSBundle mainBundle] loadNibNamed:@"WTEntryView" owner:nil options:nil];
     
@@ -175,7 +181,8 @@
         }
     }
     entryView.delegate = self;
-    entryView.nameTextField.text = cell.textLabel.text;
+    entryView.nameTextField.text = data.name;
+    entryView.calorieTextField.text = [NSString stringWithFormat:@"%i", data.numCalories];
     
     [self.view addSubview:entryView];
     

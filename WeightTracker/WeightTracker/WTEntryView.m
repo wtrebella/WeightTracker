@@ -34,6 +34,10 @@
     [self.delegate updateNameOfCell:sender.text];
 }
 
+- (IBAction)calorieTextEditingEnded:(UITextField *)sender {
+    [self.delegate updateCalorieCount:[sender.text intValue]];
+}
+
 - (BOOL) textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string {
     return YES;
 }
