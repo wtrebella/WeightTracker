@@ -8,8 +8,13 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WTWeightDisplayView : UIScrollView
+@class WTViewController;
 
+@interface WTWeightDisplayView : UIScrollView <UIGestureRecognizerDelegate> {
+    UITapGestureRecognizer *tapGesture;
+}
+
+@property (weak, nonatomic) WTViewController *viewControllerDelegate;
 @property (strong, nonatomic) UILabel *mainLabel;
 @property (strong, nonatomic) UILabel *caloriesLeftLabel;
 @property (strong, nonatomic) UILabel *dayLabel;

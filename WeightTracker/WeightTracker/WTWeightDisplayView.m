@@ -7,6 +7,8 @@
 //
 
 #import "WTWeightDisplayView.h"
+#import "WTWeightDisplayViewDelegate.h"
+#import "WTViewController.h"
 
 @implementation WTWeightDisplayView
 
@@ -39,9 +41,18 @@
         self.dayLabel.backgroundColor = [UIColor clearColor];
         self.dayLabel.textColor = [UIColor whiteColor];
         [self addSubview:self.dayLabel];
-
     }
+    
+    tapGesture = [[UITapGestureRecognizer alloc] initWithTarget:self action:@selector(wasDoubleTapped)];
+    [tapGesture setNumberOfTapsRequired:2];
+    
+    [self addGestureRecognizer:tapGesture];
+    
     return self;
+}
+
+- (void) wasDoubleTapped {
+    [self.viewControllerDelegate weightDisplayViewWasDoubleTapped];
 }
 
 /*

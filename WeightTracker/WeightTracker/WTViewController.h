@@ -8,6 +8,7 @@
 
 #import <UIKit/UIKit.h>
 #import "WTEntryViewDelegate.h"
+#import "WTWeightDisplayViewDelegate.h"
 
 @class WTFoodListTableView;
 @class WTEntryView;
@@ -15,7 +16,7 @@
 @class WTCalorieData;
 @class WTCalendarView;
 
-@interface WTViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, WTEntryViewDelegate> {
+@interface WTViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, WTEntryViewDelegate, WTWeightDisplayViewDelegate> {
     IBOutlet WTFoodListTableView *foodListTableView;
     IBOutlet WTWeightDisplayView *weightDisplayView;
     IBOutlet WTCalendarView *calendarView;
@@ -31,6 +32,7 @@
     UIButton *addNewButton;
     
     BOOL isUpForKeyboard;
+    BOOL isShowingWeightChangeForDay;
 }
 
 @end

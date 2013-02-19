@@ -26,7 +26,11 @@
     
     [self registerForKeyboardNotifications];
     
+    isShowingWeightChangeForDay = YES;
+    
     selectedDay = [self getToday];
+    
+    weightDisplayView.viewControllerDelegate = self;
     
     weekCalorieData = [[NSMutableArray alloc] init];
     for (int i = 0; i < 7; i++) [weekCalorieData addObject:[[NSMutableArray alloc] init]];
@@ -107,7 +111,14 @@
     
 }
 
-- (void)keyboardWillBeShown:(NSNotification*)aNotification
+- (void) weightDisplayViewWasDoubleTapped {
+    if (selectedDay != [self getToday]) return;
+    
+    isShowingWeightChangeForDay = !isShowingWeightChangeForDay;
+    [self updateWeightDisplay];
+}
+
+- (void) keyboardWillBeShown:(NSNotification*)aNotification
 {
     if (isUpForKeyboard) return;
     
@@ -215,9 +226,10 @@
 }
 
 - (int) netCaloriesForDay:(int)dayIndex {
+    NSMutableArray *dataArray = [weekCalorieData objectAtIndex:dayIndex - 2];
     int totalCalories = 0;
-    for (int i = 0; i < [calorieData count]; i++) {
-        WTCalorieData *data = [calorieData objectAtIndex:i];
+    for (int i = 0; i < [dataArray count]; i++) {
+        WTCalorieData *data = [dataArray objectAtIndex:i];
         int calories = data.numCalories;
         if (data.type == kCalorieTypeExercise || data.type == kCalorieTypeAuto) calories *= -1;
         totalCalories += calories;
@@ -232,6 +244,13 @@
     return [NSString stringWithFormat:@"%@ lbs", formattedNumber];
 }
 
+- (void) setWeightDisplayWithWeightChange:(float)weightChange {
+    weightDisplayView.mainLabel.text = [self formattedStringForWeightChange:weightChange];
+    if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:226.0/255.0 green:22.0/255.0 blue:61.0/255.0 alpha:1.0];
+    else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:18.0/255.0 green:191.0/255.0 blue:10.0/255.0 alpha:1.0];
+    else weightDisplayView.mainLabel.textColor = [UIColor cyanColor];
+}
+
 - (NSString *) formattedStringOfSelectedDaysWeightChange {
     int netCalories = [self netCaloriesForDay:selectedDay];
     float weightChange = netCalories / 3500.0;
@@ -240,13 +259,34 @@
 }
 
 - (void) updateWeightDisplay {
-    int netCalories = [self netCaloriesForDay:selectedDay];
-    float weightChange = netCalories / 3500.0;
+    int netCalories;
     
-    weightDisplayView.mainLabel.text = [self formattedStringForWeightChange:weightChange];
-    if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:226.0/255.0 green:22.0/255.0 blue:61.0/255.0 alpha:1.0];
-    else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:18.0/255.0 green:191.0/255.0 blue:10.0/255.0 alpha:1.0];
-    else weightDisplayView.mainLabel.textColor = [UIColor cyanColor];
+    if (selectedDay != [self getToday]) {
+        weightDisplayView.dayLabel.text = @"";
+        
+        netCalories = [self netCaloriesForDay:selectedDay];
+        float weightChange = netCalories / 3500.0;
+        [self setWeightDisplayWithWeightChange:weightChange];
+    }
+    else if (isShowingWeightChangeForDay) {
+        weightDisplayView.dayLabel.text = @"Today";
+        
+        netCalories = [self netCaloriesForDay:selectedDay];
+        float weightChange = netCalories / 3500.0;
+        [self setWeightDisplayWithWeightChange:weightChange];
+    }
+    else {
+        weightDisplayView.dayLabel.text = @"Entire Week";
+        
+        netCalories = 0;
+        
+        for (int i = 2; i <= [self getToday]; i++) {
+            netCalories += [self netCaloriesForDay:i];
+        }
+
+        float weightChange = netCalories / 3500.0;
+        [self setWeightDisplayWithWeightChange:weightChange];
+    }
     
     NSString *maintainString;
     
@@ -254,38 +294,6 @@
     else maintainString = @"";
     
     weightDisplayView.caloriesLeftLabel.text = maintainString;
-    
-    NSString *dayText;
-    
-    switch (selectedDay) {
-        case 2:
-            dayText = @"";
-            break;
-        case 3:
-            dayText = @"";
-            break;
-        case 4:
-            dayText = @"";
-            break;
-        case 5:
-            dayText = @"";
-            break;
-        case 6:
-            dayText = @"";
-            break;
-        case 7:
-            dayText = @"";
-            break;
-        case 8:
-            dayText = @"";
-            break;
-            
-        default:
-            break;
-    }
-    
-    if (selectedDay == [self getToday]) dayText = [NSString stringWithFormat:@"%@ Today", dayText];
-    weightDisplayView.dayLabel.text = dayText;
 }
 
 - (void) updateNameOfCell:(NSString *)name {
@@ -367,7 +375,7 @@
 }
 
 - (void) dismissEntryView {
-    [calorieData insertObject:[self getNewAutoburnData] atIndex:0];
+    if ([calorieData count] == 11 /*because of the stupid extra 10 thingies*/) [calorieData insertObject:[self getNewAutoburnData] atIndex:0];
     
     [foodListTableView setUserInteractionEnabled:YES];
     [calendarView setUserInteractionEnabled:YES];

@@ -70,7 +70,8 @@
     CGRect frame = CGRectMake(origin.x, origin.y, selectionView.frame.size.width, selectionView.frame.size.height);
     
     if (withAnimation) {
-        [UIView animateWithDuration:0.2 animations:^(void) {
+        //int amtMoved = (int)fabs(origin.x - selectionView.frame.origin.x) / 44;
+        [UIView animateWithDuration:0.15 animations:^(void) {
             selectionView.frame = frame;
         }];
     }
