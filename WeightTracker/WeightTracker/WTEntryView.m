@@ -9,6 +9,7 @@
 #import "WTEntryViewDelegate.h"
 #import "WTEntryView.h"
 #import "WTViewController.h"
+#import "WTCalorieData.h"
 
 @implementation WTEntryView
 
@@ -80,8 +81,31 @@
     return NO;
 }
 
+- (IBAction)calorieTextDidBeginEditing:(UITextField *)sender {
+    if ([sender.text isEqualToString:@"0"]) sender.text = @"";
+}
+
 - (IBAction)nameTextDidChange:(UITextField *)sender {
     [self.delegate updateNameOfCell:sender.text];
+}
+
+- (IBAction)calorieTypeChanged:(UISegmentedControl *)sender {
+    if (sender.selectedSegmentIndex == 0) {
+        if ([self.nameTextField.text isEqualToString:@"Exercise"]) {
+            self.nameTextField.text = @"Food";
+            [self.delegate updateNameOfCell:self.nameTextField.text];
+        }
+        [self.delegate updateCalorieType:kCalorieTypeFood];
+        [self.delegate updateCalorieCount:[self.calorieTextField.text intValue]];   
+    }
+    else if (sender.selectedSegmentIndex == 1) {
+        if ([self.nameTextField.text isEqualToString:@"Food"]) {
+            self.nameTextField.text = @"Exercise";
+            [self.delegate updateNameOfCell:self.nameTextField.text];
+        }
+        [self.delegate updateCalorieType:kCalorieTypeExercise];
+        [self.delegate updateCalorieCount:[self.calorieTextField.text intValue]];
+    }
 }
 
 - (IBAction)calorieTextEditingEnded:(UITextField *)sender {

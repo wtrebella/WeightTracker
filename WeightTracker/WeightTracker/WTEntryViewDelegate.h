@@ -7,11 +7,13 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "WTCalorieData.h"
 
 @protocol WTEntryViewDelegate <NSObject>
 
 - (void) doneButtonPressed;
 - (void) updateNameOfCell:(NSString *)name;
 - (void) updateCalorieCount:(int)calories;
+- (void) updateCalorieType:(CalorieType)type;
 
 @end

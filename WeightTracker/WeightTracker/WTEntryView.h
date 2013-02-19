@@ -16,7 +16,8 @@
 @property (strong, nonatomic) NSString *initialCalorieString;
 @property (weak, nonatomic) IBOutlet UITextField *nameTextField;
 @property (weak, nonatomic) IBOutlet UITextField *calorieTextField;
-@property WTViewController *delegate;
 @property (weak, nonatomic) IBOutlet UIButton *doneButton;
+@property (weak, nonatomic) IBOutlet UISegmentedControl *calorieTypeChooser;
+@property WTViewController *delegate;
 
 @end

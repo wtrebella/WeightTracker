@@ -223,6 +223,12 @@
     [self updateWeightDisplay];
 }
 
+- (void) updateCalorieType:(CalorieType)type {
+    WTCalorieData *data = [calorieData objectAtIndex:indexOfCurrentEditingCell.row];
+    data.type = type;
+    [foodListTableView reloadData];
+}
+
 - (void) displayEntryView {
     WTCalorieData *data = [calorieData objectAtIndex:indexOfCurrentEditingCell.row];
     
