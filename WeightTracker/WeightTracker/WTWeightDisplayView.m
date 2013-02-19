@@ -30,6 +30,15 @@
         self.caloriesLeftLabel.backgroundColor = [UIColor clearColor];
         self.caloriesLeftLabel.textColor = [UIColor whiteColor];
         [self addSubview:self.caloriesLeftLabel];
+        
+        self.dayLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, 45)];
+        self.dayLabel.font = [UIFont fontWithName:@"Futura" size:14];
+        self.dayLabel.text = @"Day";
+        self.dayLabel.textAlignment = NSTextAlignmentCenter;
+        self.dayLabel.shadowOffset = CGSizeMake(0, 1);
+        self.dayLabel.backgroundColor = [UIColor clearColor];
+        self.dayLabel.textColor = [UIColor whiteColor];
+        [self addSubview:self.dayLabel];
 
     }
     return self;

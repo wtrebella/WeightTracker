@@ -12,5 +12,6 @@
 
 @property (strong, nonatomic) UILabel *mainLabel;
 @property (strong, nonatomic) UILabel *caloriesLeftLabel;
+@property (strong, nonatomic) UILabel *dayLabel;
 
 @end

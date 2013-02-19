@@ -13,14 +13,18 @@
 @class WTEntryView;
 @class WTWeightDisplayView;
 @class WTCalorieData;
+@class WTCalendarView;
 
 @interface WTViewController : UIViewController <UITableViewDelegate, UITableViewDataSource, WTEntryViewDelegate> {
     IBOutlet WTFoodListTableView *foodListTableView;
     IBOutlet WTWeightDisplayView *weightDisplayView;
+    IBOutlet WTCalendarView *calendarView;
     
-    WTCalorieData *todaysAutoBurntCalories;
+    int selectedDay;
+    
     WTEntryView *entryView;
     NSMutableArray *calorieData;
+    NSMutableArray *weekCalorieData;
     
     NSIndexPath *indexOfCurrentEditingCell;
     

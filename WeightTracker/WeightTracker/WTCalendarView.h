@@ -8,6 +8,12 @@
 
 #import <UIKit/UIKit.h>
 
-@interface WTCalendarView : UIView
+@interface WTCalendarView : UIView {
+    UIView *selectionView;
+}
+
+@property (strong, nonatomic) NSMutableArray *dayButtons;
+
+- (void) highlightButtonForDay:(int)dayIndex withAnimation:(BOOL)withAnimation;
 
 @end

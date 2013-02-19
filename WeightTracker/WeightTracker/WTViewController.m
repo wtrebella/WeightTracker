@@ -12,6 +12,7 @@
 #import "WTWeightDisplayView.h"
 #import "WTEntryView.h"
 #import "WTCalorieData.h"
+#import "WTCalendarView.h"
 
 @interface WTViewController ()
 
@@ -19,11 +20,16 @@
 
 @implementation WTViewController
 
-- (void)viewDidLoad
+- (void) viewDidLoad
 {
     [super viewDidLoad];
     
     [self registerForKeyboardNotifications];
+    
+    selectedDay = [self getToday];
+    
+    weekCalorieData = [[NSMutableArray alloc] init];
+    for (int i = 0; i < 7; i++) [weekCalorieData addObject:[[NSMutableArray alloc] initWithObjects:[[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto], nil]];
     
     addNewButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [addNewButton setImage:[UIImage imageNamed:@"plus.png"] forState:UIControlStateNormal];
@@ -35,28 +41,40 @@
     
     isUpForKeyboard = NO;
     
-    todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
-    
-    calorieData = [[NSMutableArray alloc] initWithObjects:
-            todaysAutoBurntCalories,
-            /*[[WTCalorieData alloc] initWithName:@"Hot Dog" numCalories:250 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Ice Cream" numCalories:150 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Food" numCalories:532 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Chips" numCalories:123 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Chocolate" numCalories:75 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Turkey" numCalories:124 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Sandwich" numCalories:632 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Pecans" numCalories:54 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Cheetos" numCalories:173 type:kCalorieTypeFood],
-            [[WTCalorieData alloc] initWithName:@"Jog" numCalories:320 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Bike" numCalories:600 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Swing" numCalories:360 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Swim" numCalories:230 type:kCalorieTypeExercise],*/
-            nil];
-    
     [foodListTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
 
+    [self setDay:selectedDay withAnimation:NO];
+    
+    for (int i = 0; i < 7; i++) {
+        UIButton *b = [calendarView.dayButtons objectAtIndex:i];
+        [b addTarget:self action:@selector(dayButtonPressed:) forControlEvents:UIControlEventTouchUpInside];
+    }
+    
     [self updateWeightDisplay];
+}
+
+- (int) getToday {
+    return 8;
+    
+    NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+    [gregorian setFirstWeekday:2];
+    NSDateComponents *comps = [gregorian components:NSWeekdayCalendarUnit fromDate:[NSDate date]];
+    return [comps weekday];
+}
+
+- (void) dayButtonPressed:(UIButton *)sender {
+    if (sender.tag > [self getToday]) return;
+    [self setDay:sender.tag withAnimation:YES];
+}
+
+- (void) setDay:(int)dayIndex withAnimation:(BOOL)withAnimation {
+    selectedDay = dayIndex;
+    calorieData = [weekCalorieData objectAtIndex:selectedDay - 2];
+    [calendarView highlightButtonForDay:selectedDay withAnimation:withAnimation];
+    [foodListTableView reloadData];
+    [foodListTableView layoutIfNeeded];
+    [self updateWeightDisplay];
+    
 }
 
 - (void) addNewButtonPressed {
@@ -73,7 +91,7 @@
     [super didReceiveMemoryWarning];
 }
 
-- (void)registerForKeyboardNotifications
+- (void) registerForKeyboardNotifications
 {
     [[NSNotificationCenter defaultCenter] addObserver:self
                                              selector:@selector(keyboardWillBeShown:)
@@ -102,7 +120,7 @@
     [UIView commitAnimations];
 }
 
-- (void)keyboardWillBeHidden:(NSNotification*)aNotification
+- (void) keyboardWillBeHidden:(NSNotification*)aNotification
 {
     isUpForKeyboard = NO;
     
@@ -191,7 +209,7 @@
     return cell;
 }
 
-- (void) updateWeightDisplay {
+- (int) netCaloriesForDay:(int)dayIndex {
     int totalCalories = 0;
     for (int i = 0; i < [calorieData count]; i++) {
         WTCalorieData *data = [calorieData objectAtIndex:i];
@@ -200,16 +218,69 @@
         totalCalories += calories;
     }
     
-    float weightChange = totalCalories / 3500.0;
+    return totalCalories;
+}
+
+- (NSString *) formattedStringForWeightChange:(float)weightChange {
     NSString* formattedNumber = [NSString stringWithFormat:@"%.02f", weightChange];
     if (weightChange > 0) formattedNumber = [NSString stringWithFormat:@"+%@", formattedNumber];
-    formattedNumber = [NSString stringWithFormat:@"%@ lbs", formattedNumber];
-    weightDisplayView.mainLabel.text = formattedNumber;
+    return [NSString stringWithFormat:@"%@ lbs", formattedNumber];
+}
+
+- (NSString *) formattedStringOfSelectedDaysWeightChange {
+    int netCalories = [self netCaloriesForDay:selectedDay];
+    float weightChange = netCalories / 3500.0;
+    
+    return [self formattedStringForWeightChange:weightChange];
+}
+
+- (void) updateWeightDisplay {
+    int netCalories = [self netCaloriesForDay:selectedDay];
+    float weightChange = netCalories / 3500.0;
+    
+    weightDisplayView.mainLabel.text = [self formattedStringForWeightChange:weightChange];
     if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:226.0/255.0 green:22.0/255.0 blue:61.0/255.0 alpha:1.0];
     else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:18.0/255.0 green:191.0/255.0 blue:10.0/255.0 alpha:1.0];
     else weightDisplayView.mainLabel.textColor = [UIColor cyanColor];
     
-    weightDisplayView.caloriesLeftLabel.text = [NSString stringWithFormat:@"Calories left to maintain weight: %i", totalCalories * -1];
+    NSString *maintainString;
+    
+    if ([self getToday] == selectedDay) maintainString = [NSString stringWithFormat:@"Calories left to maintain weight: %i", netCalories * -1];
+    else maintainString = @"";
+    
+    weightDisplayView.caloriesLeftLabel.text = maintainString;
+    
+    NSString *dayText;
+    
+    switch (selectedDay) {
+        case 2:
+            dayText = @"";
+            break;
+        case 3:
+            dayText = @"";
+            break;
+        case 4:
+            dayText = @"";
+            break;
+        case 5:
+            dayText = @"";
+            break;
+        case 6:
+            dayText = @"";
+            break;
+        case 7:
+            dayText = @"";
+            break;
+        case 8:
+            dayText = @"";
+            break;
+            
+        default:
+            break;
+    }
+    
+    if (selectedDay == [self getToday]) dayText = [NSString stringWithFormat:@"%@ Today", dayText];
+    weightDisplayView.dayLabel.text = dayText;
 }
 
 - (void) updateNameOfCell:(NSString *)name {
@@ -260,6 +331,7 @@
     
     [foodListTableView setUserInteractionEnabled:NO];
     [addNewButton setUserInteractionEnabled:NO];
+    [calendarView setUserInteractionEnabled:NO];
     [entryView setUserInteractionEnabled:YES];
     
     for (int i = 0; i < 10; i++) [calorieData addObject:[[WTCalorieData alloc] initWithName:nil numCalories:0 type:kCalorieTypeFood]];
@@ -291,6 +363,7 @@
 
 - (void) dismissEntryView {
     [foodListTableView setUserInteractionEnabled:YES];
+    [calendarView setUserInteractionEnabled:YES];
     [addNewButton setUserInteractionEnabled:YES];
     
     CGRect offScreenFrame = entryView.bounds;
