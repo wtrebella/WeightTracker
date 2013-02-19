@@ -29,7 +29,7 @@
     selectedDay = [self getToday];
     
     weekCalorieData = [[NSMutableArray alloc] init];
-    for (int i = 0; i < 7; i++) [weekCalorieData addObject:[[NSMutableArray alloc] initWithObjects:[[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto], nil]];
+    for (int i = 0; i < 7; i++) [weekCalorieData addObject:[[NSMutableArray alloc] init]];
     
     addNewButton = [UIButton buttonWithType:UIButtonTypeCustom];
     [addNewButton setImage:[UIImage imageNamed:@"plus.png"] forState:UIControlStateNormal];
@@ -51,6 +51,10 @@
     }
     
     [self updateWeightDisplay];
+}
+
+- (WTCalorieData *) getNewAutoburnData {
+    return [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
 }
 
 - (int) getToday {
@@ -145,6 +149,7 @@
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		[calorieData removeObjectAtIndex:indexPath.row];
+        if ([calorieData count] == 1) [calorieData removeAllObjects];
         [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
         [tableView reloadData];
         [self updateWeightDisplay];
@@ -245,7 +250,7 @@
     
     NSString *maintainString;
     
-    if ([self getToday] == selectedDay) maintainString = [NSString stringWithFormat:@"Calories left to maintain weight: %i", netCalories * -1];
+    if ([self getToday] == selectedDay && netCalories * -1 > 0) maintainString = [NSString stringWithFormat:@"Calories left to maintain weight: %i", netCalories * -1];
     else maintainString = @"";
     
     weightDisplayView.caloriesLeftLabel.text = maintainString;
@@ -362,6 +367,8 @@
 }
 
 - (void) dismissEntryView {
+    [calorieData insertObject:[self getNewAutoburnData] atIndex:0];
+    
     [foodListTableView setUserInteractionEnabled:YES];
     [calendarView setUserInteractionEnabled:YES];
     [addNewButton setUserInteractionEnabled:YES];
@@ -371,6 +378,7 @@
     
     [foodListTableView layoutIfNeeded];
     [foodListTableView reloadData];
+    [self updateWeightDisplay];
 
     [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     
