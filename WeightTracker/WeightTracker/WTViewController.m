@@ -24,6 +24,13 @@
 {
     [super viewDidLoad];
     
+    UIApplication *myApp = [UIApplication sharedApplication];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(saveData)
+                                                 name:UIApplicationDidEnterBackgroundNotification
+                                               object:myApp];
+    
     [self registerForKeyboardNotifications];
     
     isShowingWeightChangeForDay = YES;
@@ -32,7 +39,16 @@
     
     weightDisplayView.viewControllerDelegate = self;
     
-    weekCalorieData = [[NSMutableArray alloc] init];
+    NSString *myPath = [self saveFilePath];
+    
+	BOOL fileExists = [[NSFileManager defaultManager] fileExistsAtPath:myPath];
+    
+	if (fileExists)
+	{
+        weekCalorieData = [self loadData];
+	}
+    else weekCalorieData = [[NSMutableArray alloc] init];
+
     for (int i = 0; i < 7; i++) [weekCalorieData addObject:[[NSMutableArray alloc] init]];
     
     addNewButton = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -57,13 +73,51 @@
     [self updateWeightDisplay];
 }
 
+- (NSString *) saveFilePath
+{
+    NSArray *path = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+    return [[path objectAtIndex:0] stringByAppendingPathComponent:@"savefile.txt"];
+}
+
+- (void) saveData {
+    NSString *path = [self saveFilePath];
+    
+    NSMutableData *data = [[NSMutableData alloc]init];
+    NSKeyedArchiver *archiver = [[NSKeyedArchiver alloc]initForWritingWithMutableData:data];
+    [archiver encodeObject:weekCalorieData forKey:@"weekCalorieData"];
+    [archiver finishEncoding];
+    
+    [[NSFileManager defaultManager] createFileAtPath:path
+                                            contents:data
+                                          attributes:nil];
+}
+
+- (NSMutableArray*) loadData
+{
+    NSString *path;
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory,    NSUserDomainMask, YES);
+    path = [paths objectAtIndex:0];
+    NSArray *directoryContent = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:path error:NULL];
+    
+    if (directoryContent != nil && [directoryContent count] > 0)
+    {
+        path = [self saveFilePath];
+        NSData *data = [[NSMutableData alloc]initWithContentsOfFile:path];
+        NSKeyedUnarchiver *unarchiver = [[NSKeyedUnarchiver alloc] initForReadingWithData:data];
+        NSMutableArray *array = [unarchiver decodeObjectForKey:@"weekCalorieData"];
+        [unarchiver finishDecoding];
+        
+        return array;
+    }
+    else
+        return nil;
+}
+
 - (WTCalorieData *) getNewAutoburnData {
     return [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
 }
 
-- (int) getToday {
-    return 8;
-    
+- (int) getToday {    
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     [gregorian setFirstWeekday:2];
     NSDateComponents *comps = [gregorian components:NSWeekdayCalendarUnit fromDate:[NSDate date]];
@@ -160,8 +214,14 @@
 - (void) tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
 		[calorieData removeObjectAtIndex:indexPath.row];
-        if ([calorieData count] == 1) [calorieData removeAllObjects];
-        [tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        
+        //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:indexPath] withRowAnimation:UITableViewRowAnimationLeft];
+        
+        if ([calorieData count] == 1) {
+            //[tableView deleteRowsAtIndexPaths:[NSArray arrayWithObject:[NSIndexPath indexPathForItem:0 inSection:0]] withRowAnimation:UITableViewRowAnimationNone];
+            [calorieData removeAllObjects];
+        }
+        
         [tableView reloadData];
         [self updateWeightDisplay];
 	}

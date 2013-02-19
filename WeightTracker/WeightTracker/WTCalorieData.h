@@ -14,7 +14,7 @@ typedef enum {
     kCalorieTypeAuto
 } CalorieType;
 
-@interface WTCalorieData : NSObject
+@interface WTCalorieData : NSObject <NSCoding>
 
 @property (nonatomic) CalorieType type;
 @property (nonatomic, strong) NSString *name;

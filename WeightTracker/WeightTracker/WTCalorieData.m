@@ -20,4 +20,20 @@
     return self;
 }
 
+- (id) initWithCoder:(NSCoder *)aDecoder {
+    self = [super init];
+    if (self) {
+        self.type = [aDecoder decodeIntForKey:@"type"];
+        self.name = [aDecoder decodeObjectForKey:@"name"];
+        self.numCalories = [aDecoder decodeIntForKey:@"numCalories"];
+    }
+    return self;
+}
+
+- (void) encodeWithCoder:(NSCoder *)aCoder {
+    [aCoder encodeInt:self.type forKey:@"type"];
+    [aCoder encodeObject:self.name forKey:@"name"];
+    [aCoder encodeInt:self.numCalories forKey:@"numCalories"];
+}
+
 @end
