@@ -117,7 +117,7 @@
     return [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
 }
 
-- (int) getToday {    
+- (int) getToday {
     NSCalendar *gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
     [gregorian setFirstWeekday:2];
     NSDateComponents *comps = [gregorian components:NSWeekdayCalendarUnit fromDate:[NSDate date]];
@@ -448,7 +448,7 @@
     [foodListTableView reloadData];
     [self updateWeightDisplay];
 
-    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
+    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:YES];
     
     [UIView animateWithDuration:0.4 animations:^(void) {
         entryView.frame = offScreenFrame;
@@ -457,7 +457,7 @@
         for (int i = 0; i < 10; i++) [calorieData removeLastObject];
         [foodListTableView layoutIfNeeded];
         [foodListTableView reloadData];
-        [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
+        [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:NO];
         }];
 }
 
