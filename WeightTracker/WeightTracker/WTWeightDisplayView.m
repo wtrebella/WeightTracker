@@ -14,15 +14,23 @@
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        self.backgroundColor = [UIColor colorWithRed:0.5 green:0.5 blue:0.5 alpha:1.0];
+        self.backgroundColor = [UIColor colorWithRed:0.2 green:0.2 blue:0.2 alpha:1.0];
         self.mainLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, 0, self.frame.size.width, self.frame.size.height)];
         self.mainLabel.font = [UIFont fontWithName:@"Futura" size:62];
-        self.mainLabel.text = @"+0.08lbs";
         self.mainLabel.textAlignment = NSTextAlignmentCenter;
         self.mainLabel.shadowOffset = CGSizeMake(0, 1);
         self.mainLabel.backgroundColor = [UIColor clearColor];
-        self.mainLabel.textColor = [UIColor whiteColor];//[UIColor colorWithRed:255.0/255.0 green:140.0/255.0 blue:140.0/255.0 alpha:1.0f];
         [self addSubview:self.mainLabel];
+        
+        self.caloriesLeftLabel = [[UILabel alloc] initWithFrame:CGRectMake(0, self.frame.size.height - 45, self.frame.size.width, 45)];
+        self.caloriesLeftLabel.font = [UIFont fontWithName:@"Futura" size:14];
+        self.caloriesLeftLabel.text = @"Calories left to maintain weight:";
+        self.caloriesLeftLabel.textAlignment = NSTextAlignmentCenter;
+        self.caloriesLeftLabel.shadowOffset = CGSizeMake(0, 1);
+        self.caloriesLeftLabel.backgroundColor = [UIColor clearColor];
+        self.caloriesLeftLabel.textColor = [UIColor whiteColor];
+        [self addSubview:self.caloriesLeftLabel];
+
     }
     return self;
 }

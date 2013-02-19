@@ -25,20 +25,21 @@
     
     [self registerForKeyboardNotifications];
     
-    addNewButton = [UIButton buttonWithType:UIButtonTypeRoundedRect];
+    addNewButton = [UIButton buttonWithType:UIButtonTypeCustom];
+    [addNewButton setImage:[UIImage imageNamed:@"plus.png"] forState:UIControlStateNormal];
     addNewButton.frame = CGRectMake(275, 4, 35, 35);
     [addNewButton setTitle:@"+" forState:UIControlStateNormal];
     addNewButton.titleLabel.font = [UIFont fontWithName:@"Futura" size:25];
     [addNewButton addTarget:self action:@selector(addNewButtonPressed) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:addNewButton];
-        
+    
     isUpForKeyboard = NO;
     
     todaysAutoBurntCalories = [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
     
     calorieData = [[NSMutableArray alloc] initWithObjects:
             todaysAutoBurntCalories,
-            [[WTCalorieData alloc] initWithName:@"Hot Dog" numCalories:250 type:kCalorieTypeFood],
+            /*[[WTCalorieData alloc] initWithName:@"Hot Dog" numCalories:250 type:kCalorieTypeFood],
             [[WTCalorieData alloc] initWithName:@"Ice Cream" numCalories:150 type:kCalorieTypeFood],
             [[WTCalorieData alloc] initWithName:@"Food" numCalories:532 type:kCalorieTypeFood],
             [[WTCalorieData alloc] initWithName:@"Chips" numCalories:123 type:kCalorieTypeFood],
@@ -50,7 +51,7 @@
             [[WTCalorieData alloc] initWithName:@"Jog" numCalories:320 type:kCalorieTypeExercise],
             [[WTCalorieData alloc] initWithName:@"Bike" numCalories:600 type:kCalorieTypeExercise],
             [[WTCalorieData alloc] initWithName:@"Swing" numCalories:360 type:kCalorieTypeExercise],
-            [[WTCalorieData alloc] initWithName:@"Swim" numCalories:230 type:kCalorieTypeExercise],
+            [[WTCalorieData alloc] initWithName:@"Swim" numCalories:230 type:kCalorieTypeExercise],*/
             nil];
     
     [foodListTableView setSeparatorStyle:UITableViewCellSeparatorStyleNone];
@@ -94,7 +95,7 @@
     //CGSize kbSize = [[info objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
     
     CGRect mainFrame = self.view.frame;
-    mainFrame.origin = CGPointMake(0, -130);
+    mainFrame.origin = CGPointMake(0, -80);
         
     [UIView beginAnimations:nil context:nil];
     self.view.frame = mainFrame;
@@ -183,8 +184,8 @@
     if (weightChange > 0) formattedNumber = [NSString stringWithFormat:@"+%@", formattedNumber];
     formattedNumber = [NSString stringWithFormat:@"%@ lbs", formattedNumber];
     cell.weightChangeLabel.text = formattedNumber;
-    if (weightChange > 0) cell.weightChangeLabel.textColor = [UIColor redColor];
-    else if (weightChange < 0) cell.weightChangeLabel.textColor = [UIColor greenColor];
+    if (weightChange > 0) cell.weightChangeLabel.textColor = [UIColor colorWithRed:226.0/255.0 green:22.0/255.0 blue:61.0/255.0 alpha:1.0];
+    else if (weightChange < 0) cell.weightChangeLabel.textColor = [UIColor colorWithRed:18.0/255.0 green:191.0/255.0 blue:10.0/255.0 alpha:1.0];
     else cell.weightChangeLabel.text = @"";
     
     return cell;
@@ -204,9 +205,11 @@
     if (weightChange > 0) formattedNumber = [NSString stringWithFormat:@"+%@", formattedNumber];
     formattedNumber = [NSString stringWithFormat:@"%@ lbs", formattedNumber];
     weightDisplayView.mainLabel.text = formattedNumber;
-    if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor redColor];
-    else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor greenColor];
+    if (weightChange > 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:226.0/255.0 green:22.0/255.0 blue:61.0/255.0 alpha:1.0];
+    else if (weightChange < 0) weightDisplayView.mainLabel.textColor = [UIColor colorWithRed:18.0/255.0 green:191.0/255.0 blue:10.0/255.0 alpha:1.0];
     else weightDisplayView.mainLabel.textColor = [UIColor cyanColor];
+    
+    weightDisplayView.caloriesLeftLabel.text = [NSString stringWithFormat:@"Calories left to maintain weight: %i", totalCalories * -1];
 }
 
 - (void) updateNameOfCell:(NSString *)name {
@@ -296,7 +299,7 @@
     [foodListTableView layoutIfNeeded];
     [foodListTableView reloadData];
 
-    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:YES];
+    [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionMiddle animated:YES];
     
     [UIView animateWithDuration:0.4 animations:^(void) {
         entryView.frame = offScreenFrame;
@@ -305,7 +308,7 @@
         for (int i = 0; i < 10; i++) [calorieData removeLastObject];
         [foodListTableView layoutIfNeeded];
         [foodListTableView reloadData];
-        [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionBottom animated:NO];
+        [foodListTableView scrollToRowAtIndexPath:indexOfCurrentEditingCell atScrollPosition:UITableViewScrollPositionMiddle animated:NO];
         }];
 }
 

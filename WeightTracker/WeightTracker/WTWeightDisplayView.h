@@ -11,5 +11,6 @@
 @interface WTWeightDisplayView : UIScrollView
 
 @property (strong, nonatomic) UILabel *mainLabel;
+@property (strong, nonatomic) UILabel *caloriesLeftLabel;
 
 @end
