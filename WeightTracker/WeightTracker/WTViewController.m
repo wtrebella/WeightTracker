@@ -114,7 +114,10 @@
 }
 
 - (WTCalorieData *) getNewAutoburnData {
-    return [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:2457 type:kCalorieTypeAuto];
+    //int numCals = 2457;
+    int numCals = 1987;
+    
+    return [[WTCalorieData alloc] initWithName:@"Autoburn" numCalories:numCals type:kCalorieTypeAuto];
 }
 
 - (int) getToday {
